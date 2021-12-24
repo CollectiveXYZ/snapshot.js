@@ -46,7 +46,8 @@ export default class Client {
   }
 
   async sign(web3: Web3Provider | Wallet, address: string, message, types) {
-    return await this.send(this.createEnvelop(web3, address, message, types));
+    const envelop = await this.createEnvelop(web3, address, message, types);
+    return await this.send(envelop);
   }
 
   async signRequest(
@@ -57,7 +58,6 @@ export default class Client {
     request: string
   ) {
     const envelop = await this.createEnvelop(web3, address, message, types);
-    console.log(envelop);
     return await this.send(envelop, request);
   }
 
@@ -82,8 +82,7 @@ export default class Client {
     if (request) {
       url = `${this.address}/api/v1/${request}`;
     }
-    console.log('request', request);
-    console.log('url', url);
+    console.log('envelop', envelop);
 
     const init = {
       method: 'POST',
