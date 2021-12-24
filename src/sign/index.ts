@@ -46,6 +46,27 @@ export default class Client {
   }
 
   async sign(web3: Web3Provider | Wallet, address: string, message, types) {
+    return await this.send(this.createEnvelop(web3, address, message, types));
+  }
+
+  async signRequest(
+    web3: Web3Provider | Wallet,
+    address: string,
+    message,
+    types,
+    request: string
+  ) {
+    const envelop = await this.createEnvelop(web3, address, message, types);
+    console.log(envelop);
+    return await this.send(envelop, request);
+  }
+
+  async createEnvelop(
+    web3: Web3Provider | Wallet,
+    address: string,
+    message,
+    types
+  ) {
     // @ts-ignore
     const signer = web3?.getSigner ? web3.getSigner() : web3;
     if (!message.from) message.from = address;
@@ -53,12 +74,14 @@ export default class Client {
       message.timestamp = parseInt((Date.now() / 1e3).toFixed());
     const data: any = { domain, types, message };
     const sig = await signer._signTypedData(domain, data.types, message);
-    console.log('Sign', { address, sig, data });
-    return await this.send({ address, sig, data });
+    return { address, sig, data };
   }
 
-  async send(envelop) {
-    const url = `${this.address}/api/msg`;
+  async send(envelop, request = '') {
+    let url = `${this.address}/api/msg`;
+    if (request) {
+      url = `${this.address}/api/v1/${request}`;
+    }
     const init = {
       method: 'POST',
       headers: {
@@ -78,7 +101,7 @@ export default class Client {
   }
 
   async space(web3: Web3Provider | Wallet, address: string, message: Space) {
-    return await this.sign(web3, address, message, spaceTypes);
+    return await this.signRequest(web3, address, message, spaceTypes, 'spaces');
   }
 
   async proposal(
