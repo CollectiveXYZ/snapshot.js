@@ -82,6 +82,9 @@ export default class Client {
     if (request) {
       url = `${this.address}/api/v1/${request}`;
     }
+    console.log('request', request);
+    console.log('url', url);
+
     const init = {
       method: 'POST',
       headers: {
