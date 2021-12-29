@@ -111,7 +111,13 @@ export default class Client {
     address: string,
     message: Proposal
   ) {
-    return await this.sign(web3, address, message, proposalTypes);
+    return await this.signRequest(
+      web3,
+      address,
+      message,
+      proposalTypes,
+      'proposals'
+    );
   }
 
   async cancelProposal(
