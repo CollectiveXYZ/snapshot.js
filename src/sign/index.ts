@@ -126,11 +126,12 @@ export default class Client {
     message: CancelProposal
   ) {
     const type2 = message.proposal.startsWith('0x');
-    return await this.sign(
+    return await this.signRequest(
       web3,
       address,
       message,
-      type2 ? cancelProposal2Types : cancelProposalTypes
+      type2 ? cancelProposal2Types : cancelProposalTypes,
+      'proposals/cancel'
     );
   }
 
@@ -145,7 +146,7 @@ export default class Client {
     }
     // @ts-ignore
     delete message.type;
-    return await this.sign(web3, address, message, type);
+    return await this.signRequest(web3, address, message, type, 'votes');
   }
 
   async follow(web3: Web3Provider | Wallet, address: string, message: Follow) {
