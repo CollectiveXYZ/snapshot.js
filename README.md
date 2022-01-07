@@ -16,7 +16,7 @@ This library forks [snapshot.js](https://github.com/snapshot-labs/snapshot.js) r
   const receipt = await client.space(wallet, "0x3fcc740f22A19875647cb7C4A04D4801bB432C1A", {
     space: "test.cartesian.eth",
     from: "0x3fcc740f22A19875647cb7C4A04D4801bB432C1A",
-    settings: `{"name":"test space","avatar":"ipfs://QmXpQYCgQ6276RaBAXizkBgCtqabKe8CsXujqhdkStafHQ","symbol":"EQZ","voting":{"type": "single-choice"},"network":"1","plugins":{"safeSnap":{"safes":[{"network":"1","realityAddress":"0xaaabbbb"}]}},"categories":[],"strategies":[{"name":"erc721","params":{"symbol":"EQZ","address":"0x1Da87b114f35E1DC91F72bF57fc07A768Ad40Bb0","decimals":18}}],"validation":{"name":"basic","params":{}}}`
+    settings: `{"name":"test space","avatar":"ipfs://QmXpQYCgQ6276RaBAXizkBgCtqabKe8CsXujqhdkStafHQ","symbol":"EQZ","voting":{"type": "single-choice"},"network":"4","plugins":{"safeSnap":{"safes":[{"network":"4","realityAddress":"0xbA7d7EDF58d0dB83e459D585af3330e367a253af"}]}},"categories":[],"strategies":[{"name":"erc721","params":{"symbol":"EQZ","address":"0x01F7FeEB77aE5e04d9606C209a7faFf2187Cd5c1","decimals":18}}],"validation":{"name":"basic","params":{}}}`
   })
   console.log(receipt);
 ```
@@ -34,22 +34,79 @@ This library forks [snapshot.js](https://github.com/snapshot-labs/snapshot.js) r
   const receipt = await client.proposal(wallet, "0x3fcc740f22A19875647cb7C4A04D4801bB432C1A", {
     space: 'test.cartesian.eth',
     type: 'single-choice',
-    title: 'Test proposal using Collective snapshot.js',
+    title: 'Test proposal using Collective API',
     body: '',
     choices: ['Yes', 'No'],
     start: 1638799933,
     end: 1639144255,
     snapshot: 13939561,
-    network: '1',
-    strategies: JSON.stringify([{"name":"erc721","params":{"symbol":"EQZ","address":"0x1Da87b114f35E1DC91F72bF57fc07A768Ad40Bb0","decimals":18}}]),
-    plugins: JSON.stringify({}),
+    network: '4',
+    strategies: JSON.stringify([{"name":"erc721","params":{"symbol":"EQZ","address":"0x01F7FeEB77aE5e04d9606C209a7faFf2187Cd5c1","decimals":18}}]),
+    plugins: JSON.stringify({"safeSnap":{"safes":[{"network":"4","realityAddress":"0xbA7d7EDF58d0dB83e459D585af3330e367a253af","hash":"0x021022480ce37fbd0656b9124795595ddf58698793d64a2e623779b8b413863a","txs":[{"nonce":0,"hash":"0x842193f5e7428e2aa12028109b042db6c89099f4b9ec43085554beec80e8a07b","transactions":[{"operation":"0","nonce":0,"token":{"name":"Ethereum","decimals":18,"symbol":"ETH","logoUri":"https://safe-transaction-assets.gnosis-safe.io/chains/1/currency_logo.png","address":"main"},"recipient":"0x3fcc740f22A19875647cb7C4A04D4801bB432C1A","type":"transferFunds","data":"0x","to":"0x3fcc740f22A19875647cb7C4A04D4801bB432C1A","amount":"1000000000000000000","value":"1000000000000000000"}]}]}]}}),
     metadata: JSON.stringify({})
   });
   console.log(receipt);
 ```
 - proposal `type` must be `single-choice`
-- `proposal strategies` must match `space strategies`
-- **todo:** plugins? 
+- `strategies` must match `space strategies`
+
+### safeSnap plugin:
+Example:
+```json
+  {
+  ...
+    "plugins": {
+      "safeSnap": {
+        "safes": [
+          {
+            "network": "4",
+            "realityAddress": "0xbA7d7EDF58d0dB83e459D585af3330e367a253af",
+            "hash": "0x021022480ce37fbd0656b9124795595ddf58698793d64a2e623779b8b413863a", 
+            "txs": [
+              {
+                "nonce": 0,
+                "hash": "0x842193f5e7428e2aa12028109b042db6c89099f4b9ec43085554beec80e8a07b",
+                "transactions": [
+                  {
+                    "operation": "0",
+                    "nonce": 0,
+                    "data": "0x",
+                    "to": "0x3fcc740f22A19875647cb7C4A04D4801bB432C1A",
+                    "value": "1000000000000000000"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+  ...
+  }
+```
+
+- Use the safeSnap js plugin to interact with the reality module: https://github.com/snapshot-labs/snapshot-plugins/blob/master/src/plugins/safeSnap/index.ts
+- Reality module details: 
+  - network 
+  - address
+  - txs: array of transactions that will be executed in the Gnosis Safe if the proposal is accepted
+    - call `calcTransactionHash` to generate the tx hash
+```typescript
+    const realityAddress = '0xbA7d7EDF58d0dB83e459D585af3330e367a253af';
+    const network = '4';
+    const transaction: ModuleTransaction = {
+      to: "0x3fcc740f22A19875647cb7C4A04D4801bB432C1A",
+      data: "0x",
+      nonce: "0",
+      value: "1000000000000000000",
+      operation: "0"
+    };
+    const p = new Plugin();
+    const txHash = await p.calcTransactionHash(network, realityAddress, transaction);
+    console.log(txHash);
+```
+  - hash: `keccak256(abi.encodePacked(txHashes))`
+
 
 ### Vote
 ```typescript
