@@ -89,6 +89,7 @@ Example:
 - Reality module details: 
   - network 
   - address
+  - hash: `keccak256(abi.encodePacked(txs))`
   - txs: array of transactions that will be executed in the Gnosis Safe if the proposal is accepted
     - call `calcTransactionHash` to generate the tx hash
 ```typescript
@@ -105,8 +106,23 @@ Example:
     const txHash = await p.calcTransactionHash(network, realityAddress, transaction);
     console.log(txHash);
 ```
-  - hash: `keccak256(abi.encodePacked(txHashes))`
 
+- Create question in Reality module:
+```typescript
+await p.submitProposal(web3, moduleAddress, proposalId, [transaction]);
+```
+
+- Get reality question details:
+```typescript
+  const proposalId = "0xa3c5d298e20244fa05e47b46478075de75f9d9dbd464689c72426b6e8819e04b";
+  const details = await p.getExecutionDetails(network, moduleAddress, proposalId, [transaction]);
+  console.log(details);
+```
+
+- Execute proposal in reality module
+```typescript
+await p.executeProposal(web3, moduleAddress, proposalId, [transaction], transactionIndex);
+```
 
 ### Vote
 ```typescript
