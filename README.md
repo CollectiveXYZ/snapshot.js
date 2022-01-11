@@ -4,6 +4,8 @@ This library forks [snapshot.js](https://github.com/snapshot-labs/snapshot.js) r
 
 ### Init client
 ```typescript
+  import snapshot from '@collectiveXYZ/snapshot.js';
+
   const hub = 'http://localhost:3000'; // collective-api server
   const client = new snapshot.Client712(hub);
   const provider = getDefaultProvider('https://rinkeby.infura.io/v3/<infura_project_id>');
@@ -132,4 +134,40 @@ await p.executeProposal(web3, moduleAddress, proposalId, [transaction], transact
     type: 'single-choice',
     choice: 2,
 });
+```
+
+### Get scores
+Calculate voting power for a list of voters.
+
+```typescript
+  import snapshot from '@collectiveXYZ/snapshot.js';
+  
+  const space = 'test.cartesian.eth';
+  const strategies = [
+    {
+      "name": "erc721",
+      "params": {
+        "symbol": "EQZ",
+        "address": "0x01F7FeEB77aE5e04d9606C209a7faFf2187Cd5c1",
+        "decimals": 18
+      }
+    }
+  ];
+  const network = '4';
+  const voters = [
+    '0xa478c2975ab1ea89e8196811f51a7b7ade33eb11',
+    '0xeF8305E140ac520225DAf050e2f71d5fBcC543e7',
+    '0x1E1A51E25f2816335cA436D65e9Af7694BE232ad'
+  ];
+  const blockNumber = 11437846;
+  
+  snapshot.utils.getScores(
+    space,
+    strategies,
+    network,
+    voters,
+    blockNumber
+  ).then(scores => {
+    console.log('Scores', scores);
+  });
 ```
