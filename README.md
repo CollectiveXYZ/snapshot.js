@@ -18,7 +18,7 @@ This library forks [snapshot.js](https://github.com/snapshot-labs/snapshot.js) r
   const receipt = await client.space(wallet, "0x3fcc740f22A19875647cb7C4A04D4801bB432C1A", {
     space: "test.cartesian.eth",
     from: "0x3fcc740f22A19875647cb7C4A04D4801bB432C1A",
-    settings: `{"name":"test space","avatar":"ipfs://QmXpQYCgQ6276RaBAXizkBgCtqabKe8CsXujqhdkStafHQ","symbol":"EQZ","voting":{"type": "single-choice"},"network":"4","plugins":{"safeSnap":{"safes":[{"network":"4","realityAddress":"0xbA7d7EDF58d0dB83e459D585af3330e367a253af"}]}},"categories":[],"strategies":[{"name":"erc721","params":{"symbol":"EQZ","address":"0x01F7FeEB77aE5e04d9606C209a7faFf2187Cd5c1","decimals":18}}],"validation":{"name":"basic","params":{}}}`
+    settings: `{"name":"test space","avatar":"ipfs://QmXpQYCgQ6276RaBAXizkBgCtqabKe8CsXujqhdkStafHQ","symbol":"EQZ","voting":{"type":"single-choice"},"network":"4","plugins":{"safeSnap":{"safes":[{"network":"4","realityAddress":"0xbA7d7EDF58d0dB83e459D585af3330e367a253af"}]}},"categories":[],"strategies":[{"name":"erc721","params":{"symbol":"EQZ","address":"0x01F7FeEB77aE5e04d9606C209a7faFf2187Cd5c1","decimals":18}}],"validation":{"name":"basic","params":{}},"metadata":{"safe":{"address":"0x35452c24a2c288ceff5ae6fa1f68c6c811df1650"}}}`
   })
   console.log(receipt);
 ```
