@@ -80,7 +80,7 @@ export default class Client {
   async send(envelop, request = '') {
     let url = `${this.address}/api/msg`;
     if (request) {
-      url = `${this.address}/api/v1/${request}`;
+      url = `${this.address}/${request}`;
     }
     console.log('envelop', envelop);
 
