@@ -79,13 +79,16 @@ export default class Client {
 
   async send(envelop, request = '') {
     let url = `${this.address}/api/msg`;
+    let method = 'POST';
     if (request) {
       url = `${this.address}/${request}`;
+      if (request === 'proposals/cancel') {
+        method = 'DELETE';
+      }
     }
-    console.log('envelop', envelop);
 
     const init = {
-      method: 'POST',
+      method: method,
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
