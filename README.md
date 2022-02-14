@@ -4,7 +4,7 @@ This library forks [snapshot.js](https://github.com/snapshot-labs/snapshot.js) r
 
 ### Init client
 ```typescript
-  import snapshot from '@collectiveXYZ/snapshot.js';
+  import snapshot from '@momentranks/snapshot.js';
 
   const hub = 'http://localhost:3000'; // collective-api server
   const client = new snapshot.Client712(hub);
@@ -140,7 +140,7 @@ await p.executeProposal(web3, moduleAddress, proposalId, [transaction], transact
 Calculate voting power for a list of voters.
 
 ```typescript
-  import snapshot from '@collectiveXYZ/snapshot.js';
+  import snapshot from '@momentranks/snapshot.js';
   
   const space = 'test.cartesian.eth';
   const strategies = [
